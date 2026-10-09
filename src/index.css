@@ -4,7 +4,8 @@
 :root { --cream:#f4efea; --sand:#eae0d5; --ink:#221c1a; --wine:#581825; --gold:#d4af37; --muted:#5c524d; --line:rgba(34,28,26,.14); font-family:"DM Sans",sans-serif; color:var(--ink); background:var(--cream); }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-body { margin:0; min-width:320px; background:var(--cream); }
+html,body { overflow-x:hidden; }
+body { margin:0; min-width:320px; max-width:100%; background:var(--cream); }
 button,input,select,textarea { font:inherit; }
 button { cursor:pointer; }
 h1,h2,h3,p { margin-top:0; }
@@ -177,6 +178,7 @@ footer { background:#191513; color:#d9cfca; }
   .header { height:74px; }.header-actions { display:none; }.mobile-menu { display:block; }.nav { display:none;position:absolute;top:74px;left:0;right:0;background:var(--cream);padding:20px;flex-direction:column;align-items:stretch;margin:0;border-bottom:1px solid var(--line); }.nav.open { display:flex; }.nav button { text-align:left; }
   .hero { min-height:680px;height:calc(100vh - 74px);padding:70px 28px;background-position:65% center; }.hero h1 { font-size:59px; }.hero-note { right:25px;bottom:28px; }.scroll-note { display:none; }
   .section,.inner-page { padding:75px 25px; }.intro,.village,.about-intro { grid-template-columns:1fr;gap:35px; }.intro h2,.section-head h2,.village h2,.wine-copy h2,.about-intro h2,.story-grid h2 { font-size:44px; }
+  .eyebrow { flex-wrap:wrap; }
   .section-head { align-items:start;gap:25px; }.dish-grid { grid-template-columns:1fr; }.dish-visual,.dish-photo { height:320px; }
   .wine-feature { grid-template-columns:1fr; }.wine-image { min-height:450px; }.wine-copy { padding:70px 30px; }
   .village-images { height:440px; }.footer-main { grid-template-columns:1fr 1fr;padding:55px 30px; }.footer-brand { grid-column:1/-1; }.footer-bottom { padding:20px 30px;flex-wrap:wrap;gap:15px; }
@@ -185,8 +187,13 @@ footer { background:#191513; color:#d9cfca; }
   .about-hero { height:580px;padding:60px 25px; }.story-grid { grid-template-columns:1fr;padding:0; }.story-grid>img { height:480px; }.story-grid>div { padding:70px 30px; }.value-grid { grid-template-columns:1fr; }.big-year { font-size:110px; }
 }
 @media(max-width:440px){
-  .logo small { display:none; }.hero h1 { font-size:50px; }.hero-buttons { flex-direction:column;align-items:stretch; }.hero-note { display:none; }.section-head { flex-direction:column; }.footer-main { grid-template-columns:1fr; }.footer-brand { grid-column:auto; }.footer-bottom { flex-direction:column;align-items:start; }
+  .logo small { display:none; }.hero { padding:70px 22px; }.hero h1 { font-size:50px; }.hero-content>p { width:100%; }.hero-buttons { flex-direction:column;align-items:stretch; }.hero-buttons .btn { width:100%; }.hero-note { display:none; }.section-head { flex-direction:column; }.footer-main { grid-template-columns:1fr; }.footer-brand { grid-column:auto; }.footer-bottom { flex-direction:column;align-items:start; }
+  .eyebrow { flex-wrap:wrap;letter-spacing:.14em;font-size:9px; }
   .page-title h1 i { display:block;margin:0; }
+}
+@media(max-width:390px){
+  .hero { padding:66px 18px; }.hero h1 { font-size:44px; }
+  .eyebrow { gap:9px;letter-spacing:.1em; }.eyebrow span { width:22px; }
 }
 
 /* Reservierungsformular — neue Zustände */
