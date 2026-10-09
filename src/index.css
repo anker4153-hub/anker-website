@@ -132,9 +132,11 @@ footer { background:#191513; color:#d9cfca; }
 .form-step label { display:block; margin-bottom:20px; }
 .form-step label>span { display:block; font-size:9px; text-transform:uppercase; letter-spacing:.12em; color:#655b57; margin-bottom:8px; font-weight:600; }
 .field-row { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
-.field { position:relative; }.field svg { position:absolute; left:15px; top:13px; color:#857873; }
+.field { position:relative; }.field svg { position:absolute; left:15px; top:50%; transform:translateY(-50%); color:#857873; pointer-events:none; z-index:1; }
 .form-step input,.form-step select,.form-step textarea { width:100%; border:1px solid #d8cec7; background:transparent; padding:13px 15px; font-size:12px; color:var(--ink); outline:none; }
 .field input,.field select { padding-left:45px; }
+.field select { -webkit-appearance:none; appearance:none; padding-right:38px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23857873' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat:no-repeat; background-position:right 14px center; }
+.field input[type="date"] { -webkit-appearance:none; appearance:none; min-height:46px; }
 .form-step input:focus,.form-step select:focus,.form-step textarea:focus { border-color:var(--wine); }
 .form-next { float:right; margin-top:10px; }
 .seat-options { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
@@ -190,10 +192,22 @@ footer { background:#191513; color:#d9cfca; }
   .logo small { display:none; }.hero { padding:70px 22px; }.hero h1 { font-size:50px; }.hero-content>p { width:100%; }.hero-buttons { flex-direction:column;align-items:stretch; }.hero-buttons .btn { width:100%; }.hero-note { display:none; }.section-head { flex-direction:column; }.footer-main { grid-template-columns:1fr; }.footer-brand { grid-column:auto; }.footer-bottom { flex-direction:column;align-items:start; }
   .eyebrow { flex-wrap:wrap;letter-spacing:.14em;font-size:9px; }
   .page-title h1 i { display:block;margin:0; }
+  .reserve-form { padding:30px 20px; }.form-step h2 { font-size:34px; }.steps { padding-bottom:22px;margin-bottom:28px; }.form-next { float:none;width:100%; }.form-next .btn,.form-step>.btn { width:100%; }
+  .wine-facts { flex-wrap:wrap;gap:22px; }
+  .village-images img:first-child { width:72%; }.village-images img:last-child { width:52%; }
 }
 @media(max-width:390px){
   .hero { padding:66px 18px; }.hero h1 { font-size:44px; }
   .eyebrow { gap:9px;letter-spacing:.1em; }.eyebrow span { width:22px; }
+  .intro h2,.section-head h2,.village h2,.wine-copy h2,.about-intro h2,.story-grid h2 { font-size:38px; }
+  .reserve-aside { padding:34px 24px; }.menu-list { padding:20px 16px; }
+}
+/* iOS: Eingabefelder >=16px, damit beim Fokus kein Auto-Zoom passiert */
+@media(max-width:760px){
+  .form-step input,.form-step select,.form-step textarea,
+  .modal-form input,.modal-form select,.modal-form textarea,
+  .rez-search input,.status-card input[type="date"] { font-size:16px; }
+  .field svg { top:50%; }
 }
 
 /* Reservierungsformular — neue Zustände */
@@ -358,12 +372,24 @@ footer { background:#191513; color:#d9cfca; }
   .rez-kpis { grid-template-columns:1fr 1fr; }
 }
 @media(max-width:620px){
-  .rez { padding:22px 16px 50px; }
-  .rez-head h1 { font-size:32px; }
+  .rez { padding:22px 14px 50px; }
+  .rez-head { flex-direction:column; }
+  .rez-head h1 { font-size:30px; }
+  .rez-head-actions { width:100%; }.rez-head-actions .rez-btn { flex:1; justify-content:center; }
   .rez-kpis { grid-template-columns:1fr 1fr; gap:10px; }
+  .rez-kpis b { font-size:32px; }
   .mf-row, .mf-row.three { grid-template-columns:1fr; }
   .guest-card { flex-direction:column; }
-  .guest-actions { align-self:flex-end; }
+  .guest-actions { align-self:flex-start; flex-wrap:wrap; }
+  .rez-daybar { flex-direction:column; align-items:flex-start; gap:14px; }
+  .daybar-stats { gap:22px; text-align:left; }
+  .modal-overlay { padding:20px 12px; }.modal-head { padding:18px 20px 14px; }.modal-head h2 { font-size:24px; }.modal-form { padding:18px 20px 22px; }
+  .modal-foot { flex-direction:column; }
+}
+@media(max-width:400px){
+  .rez-kpis { grid-template-columns:1fr; }
+  .cal-day { font-size:11px; }
+  .rez-tabs button { font-size:8px; padding:7px 10px; }
 }
 @media print {
   .rez-head-actions, .rez-left, .rez-search, .rez-tabs { display:none!important; }
