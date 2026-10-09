@@ -1,0 +1,7 @@
+{
+  "task_id": "task-reservation-admin",
+  "task_description": "Build a complete, polished reservation admin panel for the 'Zum Anker' restaurant site. Supabase stores reservations; Resend (via a Supabase Edge Function) sends German confirmation emails. Adds a Supabase client + env typing + config/docs, a SQL migration with RLS, a Deno edge function, a rewrite of the public 3-step reservation form to persist real data and trigger email, and a full rewrite of the admin dashboard into a live, data-driven operations console with auth gate, realtime, search/filter/sort, status actions, inline table assignment, detail drawer, admin-created reservations, and real KPIs. Everything fails soft when env vars are absent and keeps the no-semicolon/double-quote/2-space German-UI style.",
+  "status": "pending",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003", "FEAT-004"],
+  "blocked_reason": null
+}

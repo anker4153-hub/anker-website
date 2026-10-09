@@ -1,0 +1,27 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Backend artifacts: the Postgres SQL migration (reservations table + RLS) and the Deno Supabase Edge Function that sends German confirmation emails through Resend. Both live OUTSIDE src and are not type-checked by the build; verification is structural (reading the code) plus confirming the build is unaffected. Independent of FEAT-001; order it after FEAT-001 only to keep the branch linear. FEAT-003 depends on the table + function existing.",
+  "status": "pending",
+  "steps": [
+    "Create supabase/migrations/0001_reservations.sql. Start with a top-of-file SQL comment documenting that the anon INSERT policy is INTENTIONAL (the public booking form inserts as the anon role) and that anon cannot SELECT others' rows.",
+    "In that migration create table public.reservations: id uuid primary key default gen_random_uuid(), created_at timestamptz not null default now(), updated_at timestamptz not null default now(), first_name text not null, last_name text not null, email text not null, phone text not null, reservation_date date not null, reservation_time text not null, party_size int not null, seating text not null check (seating in ('Terrasse','Innen')), special_requests text, status text not null default 'Ausstehend' check (status in ('Ausstehend','Bestätigt','Platziert','Storniert','Abgeschlossen','No-Show')), table_number text.",
+    "Enable RLS: `alter table public.reservations enable row level security;`. Add policy allowing INSERT for role anon (and authenticated) with check (true). Add policies allowing SELECT, UPDATE, DELETE for role authenticated only. Do NOT grant anon SELECT.",
+    "Add an updated_at trigger: a `set_updated_at()` plpgsql function that sets new.updated_at = now(), and a `before update` trigger on reservations using it. Optionally add an index on (reservation_date, reservation_time).",
+    "Create supabase/functions/send-reservation-email/index.ts using Deno.serve. Define corsHeaders (Access-Control-Allow-Origin: '*', Access-Control-Allow-Headers for authorization, x-client-info, apikey, content-type, Access-Control-Allow-Methods: POST, OPTIONS). Handle OPTIONS preflight by returning new Response('ok', { headers: corsHeaders }).",
+    "In the function, read Deno.env.get('RESEND_API_KEY'), Deno.env.get('FROM_EMAIL'), Deno.env.get('RESTAURANT_EMAIL'). Parse the JSON body (first_name, last_name, email, phone, reservation_date, reservation_time, party_size, seating, special_requests). If RESEND_API_KEY is missing, return a JSON response indicating email is not configured (do not throw). POST to https://api.resend.com/emails with Authorization: Bearer <key>, sending a nicely formatted German HTML confirmation to the guest (brand 'Zum Anker', include date/time/party/seating), and — when RESTAURANT_EMAIL is set — a second notification email to the restaurant. Wrap fetch in try/catch and return JSON { ok: boolean } with corsHeaders; never crash the caller.",
+    "Keep all email copy in GERMAN and the sending structured so the admin can re-trigger confirmation on confirm later (FEAT-004 may invoke the same function)."
+  ],
+  "acceptance_criteria": [
+    "supabase/migrations/0001_reservations.sql exists, documents the intentional anon INSERT policy, creates the reservations table with all specified columns and the six-value status check (default 'Ausstehend'), enables RLS, grants anon INSERT only, and grants SELECT/UPDATE/DELETE to authenticated.",
+    "supabase/functions/send-reservation-email/index.ts exists, uses Deno.serve, handles OPTIONS/CORS preflight, reads RESEND_API_KEY/FROM_EMAIL/RESTAURANT_EMAIL from Deno.env, POSTs to api.resend.com/emails, sends a German HTML guest confirmation plus a restaurant notification, and never throws back to the caller.",
+    "Neither file is added to tsconfig include; `pnpm build` and `pnpm exec tsc --noEmit` are unaffected and still exit 0."
+  ],
+  "verification": [
+    "Run `pnpm exec tsc --noEmit` and `pnpm build` — both exit 0 (these files are outside src and must not affect the build).",
+    "Read supabase/migrations/0001_reservations.sql and confirm: anon-insert comment present, six status values match the canonical set exactly, RLS enabled, anon has INSERT only, authenticated has SELECT/UPDATE/DELETE.",
+    "Read supabase/functions/send-reservation-email/index.ts and confirm OPTIONS preflight returns corsHeaders, env reads are present, the Resend fetch shape is correct, and failures are caught (no uncaught throw)."
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

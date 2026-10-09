@@ -1,0 +1,10 @@
+{
+  "description": "Explore fine regional dining at Zum Anker with an elegant menu, easy reservations, and insights into the restaurant's heritage and offerings.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

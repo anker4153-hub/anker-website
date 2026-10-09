@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420" viewBox="0 0 600 420" role="img" aria-label="Paniertes Schnitzel mit Pommes und Salat">
+  <rect width="600" height="420" fill="#eae0d5"/>
+  <circle cx="300" cy="210" r="170" fill="#f4efea"/>
+  <circle cx="300" cy="210" r="170" fill="none" stroke="#d9cdc2" stroke-width="4"/>
+  <circle cx="300" cy="210" r="140" fill="none" stroke="#e3d8cc" stroke-width="2"/>
+  <!-- Schnitzel -->
+  <path d="M190 230 C185 160 250 120 320 128 C400 136 430 185 420 235 C412 285 340 300 270 295 C215 291 195 275 190 230 Z" fill="#c88a3c"/>
+  <path d="M190 230 C185 160 250 120 320 128 C400 136 430 185 420 235 C412 285 340 300 270 295 C215 291 195 275 190 230 Z" fill="none" stroke="#a9701f" stroke-width="4"/>
+  <g fill="#b97e2e" opacity="0.6">
+    <circle cx="240" cy="180" r="4"/><circle cx="280" cy="165" r="3"/><circle cx="330" cy="175" r="4"/>
+    <circle cx="370" cy="200" r="3"/><circle cx="250" cy="230" r="3"/><circle cx="300" cy="215" r="4"/>
+    <circle cx="350" cy="245" r="3"/><circle cx="390" cy="225" r="3"/><circle cx="215" cy="205" r="3"/>
+  </g>
+  <!-- Zitrone -->
+  <circle cx="400" cy="150" r="26" fill="#e8c84e"/>
+  <circle cx="400" cy="150" r="26" fill="none" stroke="#cfa92f" stroke-width="3"/>
+  <path d="M400 150 L400 128 M400 150 L420 140 M400 150 L420 162 M400 150 L400 172 M400 150 L380 162 M400 150 L380 140" stroke="#f2e39a" stroke-width="2"/>
+  <!-- Pommes -->
+  <g fill="#e4b74e" stroke="#c99a2e" stroke-width="2">
+    <rect x="150" y="300" width="14" height="70" rx="4" transform="rotate(-18 157 335)"/>
+    <rect x="172" y="305" width="14" height="72" rx="4" transform="rotate(-6 179 341)"/>
+    <rect x="196" y="306" width="14" height="70" rx="4" transform="rotate(8 203 341)"/>
+  </g>
+  <!-- Salat -->
+  <path d="M410 320 q30 -28 58 -6 q22 -24 44 8 q10 24 -14 34 q-40 16 -74 2 q-24 -14 -14 -38 Z" fill="#6f9452"/>
+  <path d="M420 330 q24 -14 46 -2 M440 322 q18 6 30 20" stroke="#8fb06f" stroke-width="3" fill="none"/>
+  <circle cx="470" cy="340" r="7" fill="#b23b3b"/>
+</svg>

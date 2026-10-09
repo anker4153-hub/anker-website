@@ -1,0 +1,41 @@
+{
+  "project_type": "Single-page restaurant website (German UI). Vite 8 + React 19 + TypeScript 5.9 + Tailwind CSS v4 (via @tailwindcss/vite). Runs inside Figma Make. Entire app currently in one file src/App.tsx (~1200 lines); global CSS in src/index.css.",
+  "language": "TypeScript / TSX (React 19). Edge function is Deno/TypeScript. Migration is SQL (Postgres).",
+  "build_system": "Vite 8 via pnpm. Scripts: dev (vite, port 8443 — ALREADY RUNNING, do NOT start it), build (vite build), preview, format (oxfmt). Vite config has '@' alias -> ./src. Node 22, pnpm 10.34.3 (.mise.toml).",
+  "test_framework": "None. No test runner is configured. Verification is typecheck + build only.",
+  "build_command": "pnpm build",
+  "test_command": "pnpm exec tsc --noEmit (typecheck; there are no unit tests)",
+  "verification_instructions": "After each feature: run `pnpm exec tsc --noEmit` and `pnpm build` from the worktree root; both must exit 0. The dev server on :8443 is managed by the user — never start or restart it. The app MUST build and render with NO env vars set (that is the current state). Do NOT fabricate live Supabase/Resend testing: verify compile + fail-soft by reading the code. The SQL migration and the Deno edge function live OUTSIDE src, so tsconfig (include: ['src','vite.config.ts']) does not type-check them and they cannot break the build — that is intentional and must stay that way (do not add supabase/** to tsconfig include).",
+  "snapshot_or_generated_files": "None. No generated/snapshot files are checked in. pnpm-lock.yaml updates when the Supabase dependency is added.",
+  "environment_constraints": "Dev server runs on :8443 and is user-managed — never run `pnpm dev` or restart it. No env vars are present; app must build/render regardless. Deliver on the mainline branch (no worktree switching); commit locally, never push. Do NOT create a real .env with secrets. .gitignore already ignores .env* .",
+  "contribution_requirements": "AGENTS.md: double quotes for strings containing apostrophes; close all JSX tags, balance braces; default export for a module's main component. Match existing App.tsx style EXACTLY: NO semicolons, double quotes, 2-space indent. All new user-facing text in GERMAN (public form + admin). Keep the diff focused on the reservation/admin feature + supporting lib/config/docs; do not refactor unrelated parts of the site.",
+  "key_patterns": "App.tsx exports default App() with a Page union 'home'|'menu'|'reservation'|'about'|'admin' and conditional rendering; when page==='admin' it returns <Admin exit={...}/> full-screen. Reusable Icon component takes a name union and renders SVG paths (existing: anchor, arrow, calendar, clock, users, pin, phone, check, chevron, menu, close, grid, book, settings, layout) — ADD new paths (search, mail, x, refresh, trash, edit, filter) to its paths map and widen the name union. Logo component supports a compact prop. CSS vars in :root: --cream #f4efea, --sand #eae0d5, --ink #221c1a, --wine #581825, --gold #d4af37, --muted #756b66, --line. Fonts: 'Cormorant Garamond' (headings), 'DM Sans' (body). Admin area is dark: bg #171412, panels #211d1a, borders #352e2a/#352d29. Admin CSS lives under the '/* Admin */' comment in index.css; responsive breakpoints at 1000px, 760px, 440px. Existing status badge classes are lowercase: .status.bestätigt (wine bg), .status.platziert (gold-ish), .status.ausstehend (grey). STANDARDIZE status badge classes as .status-<ascii-slug> (bestaetigt, platziert, ausstehend, storniert, abgeschlossen, no-show) to avoid umlaut-in-classname issues, and add all six.",
+  "relevant_files": [
+    "src/App.tsx (STUDY: Icon, Logo, Reservation (3-step form, lines ~ the Reservation() fn), Admin (placeholder dashboard to replace), App() routing, Footer 'Admin Dashboard' button; MODIFY: Reservation + Admin wiring, Icon name union/paths)",
+    "src/index.css (STUDY the '/* Admin */' section and status/badge/table/kpi classes; MODIFY: extend Admin section with new UI classes + six status-<slug> badges, keep breakpoints)",
+    "src/main.tsx (entry; imports index.css and mounts App — likely unchanged)",
+    "src/vite-env.d.ts (MODIFY: add ImportMetaEnv typing for VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY)",
+    "vite.config.ts (STUDY only: confirms '@' alias and port 8443; do not change)",
+    "tsconfig.json (STUDY only: include is ['src','vite.config.ts'], paths '@/*' -> ./src)",
+    "package.json (MODIFY: adds @supabase/supabase-js dependency)",
+    ".gitignore (STUDY only: already ignores .env*)",
+    "AGENTS.md (STUDY: code-quality rules)",
+    "NEW src/lib/supabase.ts (client singleton + isSupabaseConfigured + Reservation type)",
+    "NEW src/admin/useReservations.ts (data hook: load + realtime + CRUD, fail-soft)",
+    "NEW src/admin/AdminAuth.tsx, src/admin/AdminPanel.tsx and admin subcomponents + src/admin/adminUtils.ts",
+    "NEW supabase/migrations/0001_reservations.sql",
+    "NEW supabase/functions/send-reservation-email/index.ts (Deno)",
+    "NEW .env.example, NEW SUPABASE_SETUP.md"
+  ],
+  "directory_structure": "Repo root holds package.json, vite.config.ts, tsconfig.json, index.html, .mise.toml, AGENTS.md, .gitignore. src/ holds App.tsx, main.tsx, index.css, vite-env.d.ts. New code goes in src/lib/ (client), src/admin/ (hook + panel + subcomponents + utils), and a new top-level supabase/ dir (migrations/, functions/). Docs .env.example + SUPABASE_SETUP.md at repo root. Planning artifacts live under .agents/tasks/ (NOT part of the app; never import from there).",
+  "canonical_status_values": ["Ausstehend", "Bestätigt", "Platziert", "Storniert", "Abgeschlossen", "No-Show"],
+  "key_decisions": {
+    "status_set": "Use exactly these six German values everywhere (DB check + default 'Ausstehend', form, admin, email): Ausstehend, Bestätigt, Platziert, Storniert, Abgeschlossen, No-Show. CSS badge class = status-<ascii-slug>: status-ausstehend, status-bestaetigt, status-platziert, status-storniert, status-abgeschlossen, status-no-show.",
+    "supabase_client": "src/lib/supabase.ts reads import.meta.env.VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY. If either missing: do NOT call createClient; export client=null, isSupabaseConfigured=false, console.warn once. Callers must check isSupabaseConfigured and show German 'Supabase nicht konfiguriert'.",
+    "resend": "Server-side ONLY via Supabase Edge Function supabase/functions/send-reservation-email (Deno.serve, OPTIONS/CORS, reads RESEND_API_KEY/FROM_EMAIL/RESTAURANT_EMAIL from Deno.env, POSTs api.resend.com/emails). Public form invokes it AFTER a successful insert; email failure NEVER blocks the reservation (log + show success anyway).",
+    "admin_auth": "Supabase email/password gate (signInWithPassword) shown before the dashboard when there is no session; dark theme; no hardcoded credentials. Required because anon cannot SELECT under RLS.",
+    "occupancy_kpi": "No table-inventory source exists, so occupancy = platzierte reservations of the selected day / TOTAL_TABLES, where TOTAL_TABLES is a documented module constant = 22 (easily changed). Render with the existing .progress bar.",
+    "admin_nav": "Übersicht (KPIs + today list) and Reservierungen (full filterable list) are real and switch content. Tischplan / Speisekarte / Einstellungen have no data source: keep visible but visibly disabled ('Bald verfügbar') — no silent dead buttons.",
+    "fail_soft_contract": "No config -> public submit shows friendly German error (no crash), admin shows 'Supabase nicht konfiguriert' panel, app builds/renders fully. Insert/select/update errors -> caught, German message, optimistic UI rolled back. Email invoke failure -> console log, guest still sees success."
+  }
+}

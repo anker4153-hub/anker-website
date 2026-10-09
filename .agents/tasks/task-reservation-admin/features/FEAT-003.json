@@ -1,0 +1,26 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Rewrite the public Reservation form in src/App.tsx to persist a real reservation to Supabase and trigger the confirmation email via the edge function, keeping the EXACT existing 3-step visual design, seating options, and success screen. Depends on FEAT-001 (client + types) and FEAT-002 (table + function). Fails soft when Supabase is not configured.",
+  "status": "pending",
+  "steps": [
+    "In src/App.tsx, locate the Reservation() component (3-step form: step 1 date/time/guests, step 2 seating Terrasse/Innen, step 3 contact first/last/email/phone/special requests, then a success screen gated by `submitted`). Keep the exact JSX structure, class names, step markup, and the success screen unchanged visually.",
+    "Replace the uncontrolled inputs with controlled React state: date (default the existing \"2026-06-20\"), time (default \"19:00\"), guests (default \"2\"), seating (existing state), firstName, lastName, email, phone, specialRequests. Add state: submitting (boolean), errorMsg (string | null).",
+    "Import { supabase, isSupabaseConfigured, type ReservationInsert } from \"@/lib/supabase\". Rewrite submit(e): preventDefault; if submitting return; if !isSupabaseConfigured set errorMsg to a friendly German message (e.g. \"Online-Reservierung ist derzeit nicht verfügbar. Bitte rufen Sie uns an: +49 651 981 42 60.\") and return without crashing.",
+    "When configured: set submitting true, clear errorMsg, build the insert payload { first_name, last_name, email, phone, reservation_date, reservation_time, party_size: Number(guests), seating, special_requests: specialRequests || null } (status omitted so the DB default 'Ausstehend' applies). Call `const { data, error } = await supabase.insert(...).select().single()` on the reservations table.",
+    "If insert errors: set a German error message, set submitting false, do NOT show the success screen. If insert succeeds: fire-and-tolerate `await supabase.functions.invoke(\"send-reservation-email\", { body })` inside its own try/catch — on failure console.warn only, never block. Then set submitted true and submitting false so the EXISTING success screen renders.",
+    "Add minimal in-design UI for the new states: a disabled/pending look on the submit button while submitting (German label e.g. \"Wird gesendet …\") and a small German error line near the submit button when errorMsg is set. Reuse existing field/button classes; do not introduce a new visual language. The 'Weitere Reservierung' reset must also clear the new state."
+  ],
+  "acceptance_criteria": [
+    "The 3-step layout, seating choices, step indicators, and success screen remain visually identical to the current design.",
+    "Submitting with Supabase configured inserts a reservations row (status defaults to 'Ausstehend') and then invokes send-reservation-email; an email failure still shows the success screen.",
+    "Submitting with Supabase NOT configured shows a friendly German error and does not crash or show success.",
+    "`pnpm exec tsc --noEmit` and `pnpm build` exit 0; no-semicolon/double-quote style preserved."
+  ],
+  "verification": [
+    "Run `pnpm exec tsc --noEmit` and `pnpm build` — both exit 0.",
+    "Read the rewritten Reservation() and confirm: controlled state wired to every field, insert happens before invoke, invoke is wrapped so failure cannot block success, the not-configured branch shows a German error and returns early, and the success/reset screen matches the original."
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

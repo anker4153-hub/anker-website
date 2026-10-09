@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420" viewBox="0 0 600 420" role="img" aria-label="Currypfanne vegan mit Reis">
+  <rect width="600" height="420" fill="#eae0d5"/>
+  <circle cx="300" cy="210" r="170" fill="#f4efea"/>
+  <circle cx="300" cy="210" r="170" fill="none" stroke="#d9cdc2" stroke-width="4"/>
+  <!-- Pfanne -->
+  <circle cx="300" cy="215" r="135" fill="#2f2824"/>
+  <circle cx="300" cy="215" r="135" fill="none" stroke="#1d1915" stroke-width="4"/>
+  <rect x="430" y="205" width="150" height="20" rx="10" fill="#1d1915"/>
+  <!-- Curry -->
+  <circle cx="300" cy="215" r="112" fill="#e0a63a"/>
+  <circle cx="300" cy="215" r="112" fill="none" stroke="#c88c22" stroke-width="3"/>
+  <!-- Gemüse -->
+  <g>
+    <rect x="250" y="170" width="34" height="20" rx="6" fill="#b23b3b" transform="rotate(20 267 180)"/>
+    <rect x="320" y="185" width="34" height="20" rx="6" fill="#d98b2b" transform="rotate(-15 337 195)"/>
+    <circle cx="265" cy="245" r="15" fill="#6f9452"/>
+    <circle cx="330" cy="250" r="14" fill="#6f9452"/>
+    <path d="M290 205 q18 -10 30 6 q-8 18 -28 12 q-10 -10 -2 -18 Z" fill="#7aa05a"/>
+    <rect x="300" y="235" width="30" height="18" rx="6" fill="#b23b3b" transform="rotate(10 315 244)"/>
+    <circle cx="235" cy="210" r="12" fill="#e4b74e"/>
+    <circle cx="355" cy="225" r="11" fill="#e4b74e"/>
+    <path d="M270 275 q16 -8 26 6 q-6 14 -24 10 q-8 -8 -2 -16 Z" fill="#7aa05a"/>
+  </g>
+  <!-- Reis -->
+  <g fill="#f1ead9" stroke="#ddd0bb" stroke-width="1.5">
+    <ellipse cx="300" cy="150" rx="9" ry="4" transform="rotate(15 300 150)"/>
+    <ellipse cx="320" cy="158" rx="9" ry="4" transform="rotate(-20 320 158)"/>
+    <ellipse cx="285" cy="162" rx="9" ry="4" transform="rotate(35 285 162)"/>
+  </g>
+  <!-- Dampf -->
+  <g stroke="#f4efea" stroke-width="4" fill="none" opacity="0.5" stroke-linecap="round">
+    <path d="M265 115 q-10 -18 4 -34 q12 -14 2 -30"/>
+    <path d="M330 112 q-10 -18 4 -34 q12 -14 2 -30"/>
+  </g>
+</svg>

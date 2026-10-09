@@ -1,0 +1,29 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Foundation: add the Supabase client dependency, type the client env vars, create the fail-soft Supabase singleton + shared Reservation type, and author the config/docs (.env.example, SUPABASE_SETUP.md). This is the base every later feature imports; it must build and render with NO env vars present. Independent of FEAT-002 (backend) but FEAT-003 and FEAT-004 depend on it.",
+  "status": "pending",
+  "steps": [
+    "Run `pnpm add @supabase/supabase-js@^2` from the repo root to install latest v2 (~2.116). Confirm it lands in dependencies in package.json and pnpm-lock.yaml updates.",
+    "Edit src/vite-env.d.ts: keep the existing /// <reference types=\"vite/client\" /> and add `interface ImportMetaEnv { readonly VITE_SUPABASE_URL: string; readonly VITE_SUPABASE_ANON_KEY: string }` and `interface ImportMeta { readonly env: ImportMetaEnv }` — written in the no-semicolon, double-quote style (TS allows omitting semicolons here; match project style).",
+    "Create src/lib/supabase.ts: import { createClient, type SupabaseClient } from \"@supabase/supabase-js\". Read url = import.meta.env.VITE_SUPABASE_URL and key = import.meta.env.VITE_SUPABASE_ANON_KEY. Export const isSupabaseConfigured = Boolean(url && key). Export const supabase: SupabaseClient | null = isSupabaseConfigured ? createClient(url, key) : null. If not configured, console.warn once with a clear message (e.g. \"Supabase nicht konfiguriert …\"). Do NOT call createClient when unconfigured.",
+    "In src/lib/supabase.ts also export a shared `export type ReservationStatus = \"Ausstehend\" | \"Bestätigt\" | \"Platziert\" | \"Storniert\" | \"Abgeschlossen\" | \"No-Show\"` and `export type Reservation = { id: string; created_at: string; updated_at: string; first_name: string; last_name: string; email: string; phone: string; reservation_date: string; reservation_time: string; party_size: number; seating: \"Terrasse\" | \"Innen\"; special_requests: string | null; status: ReservationStatus; table_number: string | null }`. Also export a `ReservationInsert` type (the subset the public form sends) for reuse.",
+    "Create .env.example at the repo root listing VITE_SUPABASE_URL= and VITE_SUPABASE_ANON_KEY= with a comment block stating that RESEND_API_KEY, FROM_EMAIL, and RESTAURANT_EMAIL are Supabase Edge Function secrets (set via `supabase secrets set`) and are NOT VITE_ vars and must never reach the browser. Do NOT create a real .env.",
+    "Create SUPABASE_SETUP.md at the repo root: concise German-or-English steps to (1) apply supabase/migrations/0001_reservations.sql, (2) `supabase secrets set RESEND_API_KEY=... FROM_EMAIL=... RESTAURANT_EMAIL=...`, (3) `supabase functions deploy send-reservation-email`, (4) verify a sending domain in Resend, (5) create an admin user in Supabase Auth for the login gate, (6) copy .env.example to .env and fill the two VITE_ vars.",
+    "Confirm .gitignore already ignores .env* (it does) — do not change it unless missing."
+  ],
+  "acceptance_criteria": [
+    "`pnpm install` completes and @supabase/supabase-js ^2 is in package.json dependencies.",
+    "`pnpm exec tsc --noEmit` exits 0 with the new src/lib/supabase.ts and vite-env.d.ts typing.",
+    "`pnpm build` exits 0 with NO env vars set (client is null, warning logged, no crash).",
+    ".env.example and SUPABASE_SETUP.md exist at repo root; no real .env is created and no secret value is committed.",
+    "Code uses no semicolons, double quotes, 2-space indent."
+  ],
+  "verification": [
+    "Run `pnpm install` then `pnpm exec tsc --noEmit` — exits 0.",
+    "Run `pnpm build` with no env vars — exits 0 and does not throw.",
+    "Run `git status` and confirm no .env file is staged/tracked; confirm .gitignore ignores .env*."
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
